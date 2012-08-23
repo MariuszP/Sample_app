@@ -2,47 +2,30 @@ require 'spec_helper'
 
 describe "Static pages" do
 
+  subject { page }
+
   describe "Home page" do
+    before { visit root_path }
 
-    it "should have the content 'Sample App'" do
-
-      visit '/static_pages/home'
-      page.should have_selector('h1', :text => 'Sample App')
-
-    end
-
-    it "should have base title" do
-
-      visit '/static_pages/home'
-      page.should have_selector('title', :text => 'Test title')
-
-    end
-
-    it "should not have the custome page title" do 
-
-      visit '/static_pages/home'
-      page.should_not have_selector('title', :text => '| Home')
-    end
-
+    it { should have_selector('h1', text: 'Sample App') }
+    it { should have_selector('title', text: full_title('')) }
+    it { should_not have_selector('title', text: full_title('Home')) }
   end
 
   describe "Help page" do
+    before { visit help_path }
 
-    it "should have the content 'Help'" do
+    it { should have_selector('h1', text: 'Help') }
+    it { should have_selector('title', text: full_title('Help')) }
+  end
 
-      visit '/static_pages/help'
-      page.should have_selector('h1', :text => 'Help')
-
-    end
-
-
-    it "should have proper title" do
-      
-      visit '/static_pages/help'
-      page.should have_selector('title', :text => 'Test title | Help')
-
-    end
-
+  it "should have the right links on the layout" do
+    visit root_path
+    click_link "Help"
+    page.should have_selector 'title', text: full_title('')
+    click_link "Home"
+    click_link "Sign up now!"
+    page.should have_selector 'title', text: full_title('Sign up')
   end
 
 end
